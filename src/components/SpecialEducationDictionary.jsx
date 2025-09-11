@@ -329,31 +329,31 @@ const SpecialEducationDictionary = () => {
   }, [searchTerm, customTerms]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const DictionaryCard = ({ item, showFavorite = true }) => (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow">
-      <div className="flex items-start justify-between mb-3">
+    <div className="card p-6 mb-6">
+      <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-blue-600 font-medium">{item.livingWord}</span>
-            <ArrowRight className="w-4 h-4 text-gray-400" />
-            <span className="text-green-600 font-semibold">{item.professionalTerm}</span>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-primary-700 font-semibold text-lg">{item.livingWord}</span>
+            <ArrowRight className="w-5 h-5 text-neutral-400" />
+            <span className="text-success-600 font-bold text-lg">{item.professionalTerm}</span>
             {item.isCustom && (
-              <span className="bg-purple-200 text-purple-800 px-2 py-1 rounded text-xs font-medium">
+              <span className="badge badge-custom">
                 사용자 추가
               </span>
             )}
           </div>
-          <span className="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+          <span className="badge badge-category">
             {item.category}
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {showFavorite && (
             <button
               onClick={() => toggleFavorite(item)}
-              className={`p-1 rounded-full transition-colors ${
+              className={`p-2 rounded-full transition-all ${
                 favorites.some(fav => fav.id === item.id)
-                  ? 'text-yellow-500 hover:text-yellow-600'
-                  : 'text-gray-400 hover:text-yellow-500'
+                  ? 'text-warning-500 hover:text-warning-600 bg-warning-50'
+                  : 'text-neutral-400 hover:text-warning-500 hover:bg-warning-50'
               }`}
             >
               <Star className={`w-5 h-5 ${favorites.some(fav => fav.id === item.id) ? 'fill-current' : ''}`} />
@@ -362,7 +362,7 @@ const SpecialEducationDictionary = () => {
           {item.isCustom && (
             <button
               onClick={() => handleDeleteCustomTerm(item.id)}
-              className="p-1 rounded-full text-red-400 hover:text-red-600 transition-colors"
+              className="p-2 rounded-full text-error-400 hover:text-error-600 hover:bg-error-50 transition-all"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -370,13 +370,13 @@ const SpecialEducationDictionary = () => {
         </div>
       </div>
       
-      <p className="text-gray-700 text-sm mb-3">{item.definition}</p>
+      <p className="text-neutral-700 text-base mb-4 leading-relaxed">{item.definition}</p>
       
-      <div className="border-t pt-3 mb-3">
-        <p className="text-xs text-gray-600 mb-1">관련 표현:</p>
-        <div className="flex flex-wrap gap-1">
+      <div className="border-t border-neutral-200 pt-4 mb-4">
+        <p className="text-sm text-neutral-600 mb-3 font-medium">관련 표현:</p>
+        <div className="flex flex-wrap gap-2">
           {item.examples.map((example, idx) => (
-            <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+            <span key={idx} className="bg-neutral-100 text-neutral-700 px-3 py-2 rounded-full text-sm font-medium hover:bg-neutral-200 transition-colors">
               {example}
             </span>
           ))}
@@ -385,14 +385,14 @@ const SpecialEducationDictionary = () => {
 
       {/* 법률/공식 문서 예문 표시 */}
       {item.legalExamples && item.legalExamples.length > 0 && (
-        <div className="border-t pt-3">
-          <div className="flex items-center gap-1 mb-2">
-            <FileText className="w-4 h-4 text-blue-600" />
-            <p className="text-xs text-blue-600 font-medium">법률·공식문서 예문:</p>
+        <div className="border-t border-neutral-200 pt-4">
+          <div className="flex items-center gap-2 mb-3">
+            <FileText className="w-5 h-5 text-primary-600" />
+            <p className="text-sm text-primary-600 font-semibold">법률·공식문서 예문</p>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {item.legalExamples.map((example, idx) => (
-              <div key={idx} className="bg-blue-50 p-2 rounded text-xs text-blue-800 border-l-3 border-blue-300">
+              <div key={idx} className="legal-example">
                 {example}
               </div>
             ))}
@@ -405,29 +405,27 @@ const SpecialEducationDictionary = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-4xl mx-auto p-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">특수교육 용어 사전</h1>
-          <p className="text-gray-600">생활어를 전공어로 쉽게 변환하고 나만의 용어를 추가하세요</p>
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">특수교육 용어 사전</h1>
+          <p className="text-white/90 text-lg font-medium">생활어를 전공어로 쉽게 변환하고 나만의 용어를 추가하세요</p>
         </div>
 
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
           <input
             type="text"
             placeholder="생활어나 전공어를 검색해보세요... (예: 말더듬, ADHD)"
-            className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="input-field w-full pl-12 pr-6"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        <div className="flex mb-6 bg-white rounded-lg shadow-sm p-1">
+        <div className="tab-container flex mb-6">
           <button
             onClick={() => setActiveTab('search')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
-              activeTab === 'search'
-                ? 'bg-blue-500 text-white shadow-md'
-                : 'text-gray-600 hover:text-blue-500'
+            className={`tab-button flex-1 flex items-center justify-center gap-2 ${
+              activeTab === 'search' ? 'active' : ''
             }`}
           >
             <Search className="w-4 h-4" />
@@ -435,10 +433,8 @@ const SpecialEducationDictionary = () => {
           </button>
           <button
             onClick={() => setActiveTab('favorites')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
-              activeTab === 'favorites'
-                ? 'bg-blue-500 text-white shadow-md'
-                : 'text-gray-600 hover:text-blue-500'
+            className={`tab-button flex-1 flex items-center justify-center gap-2 ${
+              activeTab === 'favorites' ? 'active' : ''
             }`}
           >
             <Star className="w-4 h-4" />
@@ -446,10 +442,8 @@ const SpecialEducationDictionary = () => {
           </button>
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-all ${
-              activeTab === 'history'
-                ? 'bg-blue-500 text-white shadow-md'
-                : 'text-gray-600 hover:text-blue-500'
+            className={`tab-button flex-1 flex items-center justify-center gap-2 ${
+              activeTab === 'history' ? 'active' : ''
             }`}
           >
             <History className="w-4 h-4" />
@@ -458,17 +452,17 @@ const SpecialEducationDictionary = () => {
         </div>
 
         {/* 용어 추가 버튼 */}
-        <div className="mb-4 flex justify-end">
+        <div className="mb-6 flex justify-end">
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            className="btn-success flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             새 용어 추가
           </button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card p-8">
           {activeTab === 'search' && (
             <div>
               {!searchTerm ? (
