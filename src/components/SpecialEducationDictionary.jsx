@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2 } from 'lucide-react';
+import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send } from 'lucide-react';
 
 const SpecialEducationDictionary = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,13 +8,21 @@ const SpecialEducationDictionary = () => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [activeTab, setActiveTab] = useState('search');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showSuggestionModal, setShowSuggestionModal] = useState(false);
   const [customTerms, setCustomTerms] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [newTerm, setNewTerm] = useState({
     livingWord: '',
     professionalTerm: '',
     category: '',
     definition: '',
     examples: ['']
+  });
+  const [newSuggestion, setNewSuggestion] = useState({
+    type: 'improvement', // 'improvement', 'bug', 'feature'
+    title: '',
+    description: '',
+    contact: ''
   });
 
   // 생활어 → 전공어 변환 데이터베이스 (법률 예문 추가)
@@ -218,6 +226,11 @@ const SpecialEducationDictionary = () => {
     if (savedHistory) {
       setSearchHistory(JSON.parse(savedHistory));
     }
+
+    const savedSuggestions = localStorage.getItem('suggestions');
+    if (savedSuggestions) {
+      setSuggestions(JSON.parse(savedSuggestions));
+    }
   }, []);
 
   // 로컬 스토리지에 저장
@@ -232,6 +245,10 @@ const SpecialEducationDictionary = () => {
   useEffect(() => {
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
   }, [searchHistory]);
+
+  useEffect(() => {
+    localStorage.setItem('suggestions', JSON.stringify(suggestions));
+  }, [suggestions]);
 
   // 전체 사전 (기본 + 사용자 정의)
   const allTerms = [...dictionary, ...customTerms];
@@ -300,6 +317,49 @@ const SpecialEducationDictionary = () => {
       setCustomTerms(prev => prev.filter(term => term.id !== id));
       setFavorites(prev => prev.filter(fav => fav.id !== id));
     }
+  };
+
+  // 개선사항 제안 추가
+  const handleAddSuggestion = () => {
+    if (!newSuggestion.title.trim() || !newSuggestion.description.trim()) {
+      alert('제목과 설명을 모두 입력해주세요.');
+      return;
+    }
+
+    const suggestion = {
+      ...newSuggestion,
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      status: 'submitted'
+    };
+
+    setSuggestions(prev => [...prev, suggestion]);
+    setNewSuggestion({
+      type: 'improvement',
+      title: '',
+      description: '',
+      contact: ''
+    });
+    setShowSuggestionModal(false);
+    alert('소중한 의견 감사합니다! 검토 후 반영하도록 하겠습니다.');
+  };
+
+  // 검색 기록에서 특정 항목 삭제
+  const removeFromHistory = (termToRemove) => {
+    setSearchHistory(prev => prev.filter(term => term !== termToRemove));
+  };
+
+  // 검색 기록 전체 삭제
+  const clearSearchHistory = () => {
+    if (window.confirm('모든 검색 기록을 삭제하시겠습니까?')) {
+      setSearchHistory([]);
+    }
+  };
+
+  // 검색 기록 클릭시 자동 검색
+  const handleHistoryClick = (term) => {
+    setSearchTerm(term);
+    setActiveTab('search');
   };
 
   // 예시 입력 필드 추가/제거
@@ -451,8 +511,15 @@ const SpecialEducationDictionary = () => {
           </button>
         </div>
 
-        {/* 용어 추가 버튼 */}
-        <div className="mb-6 flex justify-end">
+        {/* 용어 추가 및 개선사항 제안 버튼 */}
+        <div className="mb-6 flex justify-between items-center">
+          <button
+            onClick={() => setShowSuggestionModal(true)}
+            className="btn-primary flex items-center gap-2"
+          >
+            <MessageSquare className="w-4 h-4" />
+            개선사항 제안
+          </button>
           <button
             onClick={() => setShowAddModal(true)}
             className="btn-success flex items-center gap-2"
@@ -524,25 +591,48 @@ const SpecialEducationDictionary = () => {
             <div>
               {searchHistory.length === 0 ? (
                 <div className="text-center py-12">
-                  <History className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-600 mb-2">검색 기록이 없습니다</h3>
-                  <p className="text-gray-500">용어를 검색하면 최근 검색어가 여기에 표시됩니다</p>
+                  <History className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-neutral-600 mb-2">검색 기록이 없습니다</h3>
+                  <p className="text-neutral-500">용어를 검색하면 최근 검색어가 여기에 표시됩니다</p>
                 </div>
               ) : (
                 <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <History className="w-5 h-5 text-gray-500" />
-                    <span className="text-sm text-gray-600">최근 검색어</span>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                      <History className="w-5 h-5 text-neutral-500" />
+                      <span className="text-lg font-semibold text-neutral-700">최근 검색어</span>
+                      <span className="bg-primary-100 text-primary-600 px-2 py-1 rounded-full text-xs font-medium">
+                        {searchHistory.length}개
+                      </span>
+                    </div>
+                    <button
+                      onClick={clearSearchHistory}
+                      className="text-error-500 hover:text-error-600 text-sm font-medium px-3 py-1 rounded-lg hover:bg-error-50 transition-all"
+                    >
+                      전체 삭제
+                    </button>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid gap-3">
                     {searchHistory.map((term, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setSearchTerm(term)}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-full text-sm transition-colors"
-                      >
-                        {term}
-                      </button>
+                      <div key={idx} className="flex items-center justify-between bg-neutral-50 hover:bg-neutral-100 p-3 rounded-lg transition-all group">
+                        <button
+                          onClick={() => handleHistoryClick(term)}
+                          className="flex-1 text-left text-neutral-700 hover:text-primary-600 font-medium transition-colors"
+                        >
+                          <Search className="w-4 h-4 inline mr-2 text-neutral-400" />
+                          {term}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFromHistory(term);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-1 text-error-400 hover:text-error-600 hover:bg-error-50 rounded-full transition-all"
+                          title="검색어 삭제"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -563,6 +653,105 @@ const SpecialEducationDictionary = () => {
           </ul>
         </div>
       </div>
+
+      {/* 개선사항 제안 모달 */}
+      {showSuggestionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-xl font-semibold text-neutral-800 flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-primary-600" />
+                개선사항 제안
+              </h3>
+              <button
+                onClick={() => setShowSuggestionModal(false)}
+                className="text-neutral-400 hover:text-neutral-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  제안 유형 <span className="text-error-500">*</span>
+                </label>
+                <select
+                  value={newSuggestion.type}
+                  onChange={(e) => setNewSuggestion(prev => ({ ...prev, type: e.target.value }))}
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  <option value="improvement">개선사항</option>
+                  <option value="bug">버그 신고</option>
+                  <option value="feature">새 기능 요청</option>
+                  <option value="content">용어 추가/수정 요청</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  제목 <span className="text-error-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newSuggestion.title}
+                  onChange={(e) => setNewSuggestion(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="간단한 제목을 입력해주세요"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  상세 설명 <span className="text-error-500">*</span>
+                </label>
+                <textarea
+                  value={newSuggestion.description}
+                  onChange={(e) => setNewSuggestion(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  rows="4"
+                  placeholder="구체적인 내용을 입력해주세요"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  연락처 (선택)
+                </label>
+                <input
+                  type="text"
+                  value={newSuggestion.contact}
+                  onChange={(e) => setNewSuggestion(prev => ({ ...prev, contact: e.target.value }))}
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="이메일 또는 연락처 (선택사항)"
+                />
+              </div>
+
+              <div className="bg-primary-50 p-3 rounded-lg">
+                <p className="text-sm text-primary-800">
+                  💡 <strong>도움말:</strong> 구체적인 예시나 상황을 포함해서 작성해주시면 더 빠르고 정확한 개선이 가능합니다!
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 p-6 border-t">
+              <button
+                onClick={() => setShowSuggestionModal(false)}
+                className="flex-1 px-4 py-2 text-neutral-600 border border-neutral-300 rounded-md hover:bg-neutral-50 transition-colors"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleAddSuggestion}
+                className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" />
+                제안하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 용어 추가 모달 */}
       {showAddModal && (
