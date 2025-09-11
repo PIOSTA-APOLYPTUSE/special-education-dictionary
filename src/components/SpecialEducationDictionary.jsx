@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, Edit3 } from 'lucide-react';
+import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2 } from 'lucide-react';
 
 const SpecialEducationDictionary = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -326,7 +326,7 @@ const SpecialEducationDictionary = () => {
 
   useEffect(() => {
     handleSearch(searchTerm);
-  }, [searchTerm, customTerms]);
+  }, [searchTerm, customTerms]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const DictionaryCard = ({ item, showFavorite = true }) => (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow">
