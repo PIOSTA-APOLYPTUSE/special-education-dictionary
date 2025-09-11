@@ -1,0 +1,60 @@
+{
+  "short_name": "특수교육사전",
+  "name": "특수교육 용어 사전",
+  "description": "생활어를 전문용어로 쉽게 변환하고 법령 예문까지 확인할 수 있는 특수교육 용어 사전",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ko",
+  "categories": ["education", "reference", "productivity"],
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "특수교육 용어 검색 화면"
+    },
+    {
+      "src": "screenshot2.png", 
+      "sizes": "640x1136",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "모바일 화면"
+    }
+  ]
+}
