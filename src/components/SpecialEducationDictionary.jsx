@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send } from 'lucide-react';
+import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List } from 'lucide-react';
 
 const SpecialEducationDictionary = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -9,6 +9,8 @@ const SpecialEducationDictionary = () => {
   const [activeTab, setActiveTab] = useState('search');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSuggestionModal, setShowSuggestionModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingTerm, setEditingTerm] = useState(null);
   const [customTerms, setCustomTerms] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [newTerm, setNewTerm] = useState({
@@ -21,8 +23,7 @@ const SpecialEducationDictionary = () => {
   const [newSuggestion, setNewSuggestion] = useState({
     type: 'improvement', // 'improvement', 'bug', 'feature'
     title: '',
-    description: '',
-    contact: ''
+    description: ''
   });
 
   // 생활어 → 전공어 변환 데이터베이스 (법률 예문 추가)
@@ -268,9 +269,19 @@ const SpecialEducationDictionary = () => {
     );
 
     setSearchResults(results);
-    
-    if (term && !searchHistory.includes(term)) {
-      setSearchHistory(prev => [term, ...prev.slice(0, 4)]);
+  };
+
+  // 검색어 히스토리 추가 (엔터키 입력시에만)
+  const addToSearchHistory = (term) => {
+    if (term && term.trim() && !searchHistory.includes(term.trim())) {
+      setSearchHistory(prev => [term.trim(), ...prev.slice(0, 4)]);
+    }
+  };
+
+  // 키보드 이벤트 핸들러
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      addToSearchHistory(searchTerm);
     }
   };
 
@@ -311,6 +322,56 @@ const SpecialEducationDictionary = () => {
     alert('새로운 용어가 추가되었습니다!');
   };
 
+  // 사용자 정의 용어 편집 시작
+  const handleEditCustomTerm = (term) => {
+    setEditingTerm({ ...term });
+    setNewTerm({
+      livingWord: term.livingWord,
+      professionalTerm: term.professionalTerm,
+      category: term.category,
+      definition: term.definition,
+      examples: term.examples.length > 0 ? [...term.examples] : ['']
+    });
+    setShowEditModal(true);
+  };
+
+  // 사용자 정의 용어 업데이트
+  const handleUpdateCustomTerm = () => {
+    if (!newTerm.livingWord.trim() || !newTerm.professionalTerm.trim()) {
+      alert('생활어와 전공어를 모두 입력해주세요.');
+      return;
+    }
+
+    const updatedTerm = {
+      ...editingTerm,
+      livingWord: newTerm.livingWord,
+      professionalTerm: newTerm.professionalTerm,
+      category: newTerm.category,
+      definition: newTerm.definition,
+      examples: newTerm.examples.filter(example => example.trim() !== '')
+    };
+
+    setCustomTerms(prev => prev.map(term =>
+      term.id === editingTerm.id ? updatedTerm : term
+    ));
+
+    // 즐겨찾기에서도 업데이트
+    setFavorites(prev => prev.map(fav =>
+      fav.id === editingTerm.id ? updatedTerm : fav
+    ));
+
+    setNewTerm({
+      livingWord: '',
+      professionalTerm: '',
+      category: '',
+      definition: '',
+      examples: ['']
+    });
+    setEditingTerm(null);
+    setShowEditModal(false);
+    alert('용어가 성공적으로 수정되었습니다!');
+  };
+
   // 사용자 정의 용어 삭제
   const handleDeleteCustomTerm = (id) => {
     if (window.confirm('이 용어를 삭제하시겠습니까?')) {
@@ -337,8 +398,7 @@ const SpecialEducationDictionary = () => {
     setNewSuggestion({
       type: 'improvement',
       title: '',
-      description: '',
-      contact: ''
+      description: ''
     });
     setShowSuggestionModal(false);
     alert('소중한 의견 감사합니다! 검토 후 반영하도록 하겠습니다.');
@@ -420,12 +480,22 @@ const SpecialEducationDictionary = () => {
             </button>
           )}
           {item.isCustom && (
-            <button
-              onClick={() => handleDeleteCustomTerm(item.id)}
-              className="p-2 rounded-full text-error-400 hover:text-error-600 hover:bg-error-50 transition-all"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+            <>
+              <button
+                onClick={() => handleEditCustomTerm(item)}
+                className="p-2 rounded-full text-primary-400 hover:text-primary-600 hover:bg-primary-50 transition-all"
+                title="용어 수정"
+              >
+                <Edit className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleDeleteCustomTerm(item.id)}
+                className="p-2 rounded-full text-error-400 hover:text-error-600 hover:bg-error-50 transition-all"
+                title="용어 삭제"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </>
           )}
         </div>
       </div>
@@ -478,6 +548,7 @@ const SpecialEducationDictionary = () => {
             className="input-field w-full pl-12 pr-6"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
         </div>
 
@@ -508,6 +579,15 @@ const SpecialEducationDictionary = () => {
           >
             <History className="w-4 h-4" />
             최근 검색
+          </button>
+          <button
+            onClick={() => setActiveTab('wordlist')}
+            className={`tab-button flex-1 flex items-center justify-center gap-2 ${
+              activeTab === 'wordlist' ? 'active' : ''
+            }`}
+          >
+            <List className="w-4 h-4" />
+            단어 목록
           </button>
         </div>
 
@@ -639,6 +719,184 @@ const SpecialEducationDictionary = () => {
               )}
             </div>
           )}
+
+          {activeTab === 'wordlist' && (
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <List className="w-5 h-5 text-primary-500" />
+                <span className="text-lg font-semibold text-neutral-700">전체 단어 목록</span>
+                <span className="bg-primary-100 text-primary-600 px-2 py-1 rounded-full text-xs font-medium">
+                  {allTerms.length}개
+                </span>
+              </div>
+
+              {/* 장애 유형별 분류 */}
+              {['언어장애', '정서행동장애', '지적장애', '발달장애', '학습장애', '법제도', '교육과정', '평가도구', '교수방법'].map(category => {
+                const categoryTerms = allTerms.filter(term => term.category === category);
+                if (categoryTerms.length === 0) return null;
+
+                return (
+                  <div key={category} className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full font-semibold text-sm">
+                        {category}
+                      </div>
+                      <span className="text-sm text-neutral-500">
+                        {categoryTerms.length}개
+                      </span>
+                    </div>
+
+                    <div className="grid gap-4">
+                      {categoryTerms.map(term => (
+                        <div key={term.id} className="bg-white border border-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-3">
+                              <span className="text-primary-700 font-medium">{term.livingWord}</span>
+                              <ArrowRight className="w-4 h-4 text-neutral-400" />
+                              <span className="text-success-600 font-semibold">{term.professionalTerm}</span>
+                              {term.isCustom && (
+                                <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-medium">
+                                  사용자 추가
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => toggleFavorite(term)}
+                                className={`p-1 rounded transition-all ${
+                                  favorites.some(fav => fav.id === term.id)
+                                    ? 'text-warning-500 hover:text-warning-600'
+                                    : 'text-neutral-400 hover:text-warning-500'
+                                }`}
+                                title="즐겨찾기"
+                              >
+                                <Star className={`w-4 h-4 ${favorites.some(fav => fav.id === term.id) ? 'fill-current' : ''}`} />
+                              </button>
+                              {term.isCustom && (
+                                <>
+                                  <button
+                                    onClick={() => handleEditCustomTerm(term)}
+                                    className="p-1 rounded text-primary-400 hover:text-primary-600 transition-all"
+                                    title="편집"
+                                  >
+                                    <Edit className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteCustomTerm(term.id)}
+                                    className="p-1 rounded text-error-400 hover:text-error-600 transition-all"
+                                    title="삭제"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {term.definition && (
+                            <p className="text-sm text-neutral-600 mb-2">{term.definition}</p>
+                          )}
+
+                          {term.examples && term.examples.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {term.examples.map((example, idx) => (
+                                <span key={idx} className="bg-neutral-100 text-neutral-600 px-2 py-1 rounded text-xs">
+                                  {example}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* 카테고리가 없는 용어들 */}
+              {(() => {
+                const uncategorizedTerms = allTerms.filter(term => !term.category || term.category === '');
+                if (uncategorizedTerms.length === 0) return null;
+
+                return (
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="bg-neutral-100 text-neutral-700 px-3 py-1 rounded-full font-semibold text-sm">
+                        기타
+                      </div>
+                      <span className="text-sm text-neutral-500">
+                        {uncategorizedTerms.length}개
+                      </span>
+                    </div>
+
+                    <div className="grid gap-4">
+                      {uncategorizedTerms.map(term => (
+                        <div key={term.id} className="bg-white border border-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-3">
+                              <span className="text-primary-700 font-medium">{term.livingWord}</span>
+                              <ArrowRight className="w-4 h-4 text-neutral-400" />
+                              <span className="text-success-600 font-semibold">{term.professionalTerm}</span>
+                              {term.isCustom && (
+                                <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-medium">
+                                  사용자 추가
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => toggleFavorite(term)}
+                                className={`p-1 rounded transition-all ${
+                                  favorites.some(fav => fav.id === term.id)
+                                    ? 'text-warning-500 hover:text-warning-600'
+                                    : 'text-neutral-400 hover:text-warning-500'
+                                }`}
+                                title="즐겨찾기"
+                              >
+                                <Star className={`w-4 h-4 ${favorites.some(fav => fav.id === term.id) ? 'fill-current' : ''}`} />
+                              </button>
+                              {term.isCustom && (
+                                <>
+                                  <button
+                                    onClick={() => handleEditCustomTerm(term)}
+                                    className="p-1 rounded text-primary-400 hover:text-primary-600 transition-all"
+                                    title="편집"
+                                  >
+                                    <Edit className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteCustomTerm(term.id)}
+                                    className="p-1 rounded text-error-400 hover:text-error-600 transition-all"
+                                    title="삭제"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {term.definition && (
+                            <p className="text-sm text-neutral-600 mb-2">{term.definition}</p>
+                          )}
+
+                          {term.examples && term.examples.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {term.examples.map((example, idx) => (
+                                <span key={idx} className="bg-neutral-100 text-neutral-600 px-2 py-1 rounded text-xs">
+                                  {example}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
 
         {/* 사용 도움말 */}
@@ -714,18 +972,6 @@ const SpecialEducationDictionary = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  연락처 (선택)
-                </label>
-                <input
-                  type="text"
-                  value={newSuggestion.contact}
-                  onChange={(e) => setNewSuggestion(prev => ({ ...prev, contact: e.target.value }))}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  placeholder="이메일 또는 연락처 (선택사항)"
-                />
-              </div>
 
               <div className="bg-primary-50 p-3 rounded-lg">
                 <p className="text-sm text-primary-800">
@@ -859,6 +1105,138 @@ const SpecialEducationDictionary = () => {
                 className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
               >
                 추가
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 용어 수정 모달 */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-800">용어 수정</h3>
+              <button
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditingTerm(null);
+                  setNewTerm({
+                    livingWord: '',
+                    professionalTerm: '',
+                    category: '',
+                    definition: '',
+                    examples: ['']
+                  });
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  생활어 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newTerm.livingWord}
+                  onChange={(e) => setNewTerm(prev => ({ ...prev, livingWord: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="예: 말더듬"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  전공어 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newTerm.professionalTerm}
+                  onChange={(e) => setNewTerm(prev => ({ ...prev, professionalTerm: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="예: 유창성 장애(Fluency Disorder)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+                <input
+                  type="text"
+                  value={newTerm.category}
+                  onChange={(e) => setNewTerm(prev => ({ ...prev, category: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="예: 언어장애"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">정의</label>
+                <textarea
+                  value={newTerm.definition}
+                  onChange={(e) => setNewTerm(prev => ({ ...prev, definition: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows="3"
+                  placeholder="용어의 정의를 입력하세요"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">관련 표현</label>
+                {newTerm.examples.map((example, index) => (
+                  <div key={index} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={example}
+                      onChange={(e) => updateExample(index, e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="관련 표현을 입력하세요"
+                    />
+                    {newTerm.examples.length > 1 && (
+                      <button
+                        onClick={() => removeExampleField(index)}
+                        className="text-red-500 hover:text-red-700 px-2"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  onClick={addExampleField}
+                  className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1"
+                >
+                  <Plus className="w-4 h-4" />
+                  관련 표현 추가
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-2 p-4 border-t">
+              <button
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditingTerm(null);
+                  setNewTerm({
+                    livingWord: '',
+                    professionalTerm: '',
+                    category: '',
+                    definition: '',
+                    examples: ['']
+                  });
+                }}
+                className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleUpdateCustomTerm}
+                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              >
+                수정
               </button>
             </div>
           </div>
