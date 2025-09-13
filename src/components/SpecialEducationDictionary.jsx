@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List } from 'lucide-react';
 
+// Force build hash change for deployment v1.0.1
 const SpecialEducationDictionary = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -538,6 +539,7 @@ const SpecialEducationDictionary = () => {
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">특수교육 용어 사전</h1>
           <p className="text-white/90 text-lg font-medium">생활어를 전공어로 쉽게 변환하고 나만의 용어를 추가하세요</p>
+          <div className="text-white/70 text-sm mt-2">v1.0.1 - 향상된 검색 및 관리 기능</div>
         </div>
 
         <div className="relative mb-6">
