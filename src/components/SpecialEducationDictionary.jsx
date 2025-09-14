@@ -262,27 +262,36 @@ const SpecialEducationDictionary = () => {
     localStorage.setItem('suggestions', JSON.stringify(suggestions));
   }, [suggestions]);
 
-  // 테마 초기화 및 적용
+  // 테마 초기화 및 적용 - 개선된 버전
   useEffect(() => {
-    const applyTheme = (theme) => {
-      if (theme === 'dark') {
+    console.log('테마 변경:', theme); // 디버깅용
+
+    const applyTheme = (themeValue) => {
+      console.log('테마 적용 중:', themeValue); // 디버깅용
+
+      if (themeValue === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
+        document.body.classList.add('dark-theme');
       } else {
         document.documentElement.removeAttribute('data-theme');
+        document.body.classList.remove('dark-theme');
       }
+
+      // 강제로 스타일 재계산
+      document.documentElement.style.setProperty('--current-theme', themeValue);
+      localStorage.setItem('theme', themeValue);
     };
 
     // 초기 테마 적용
     applyTheme(theme);
-    localStorage.setItem('theme', theme);
 
     // 시스템 테마 변경 감지
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemThemeChange = (e) => {
-      if (!localStorage.getItem('theme')) {
+      const savedTheme = localStorage.getItem('theme');
+      if (!savedTheme) { // 저장된 테마가 없을 때만 시스템 테마 따름
         const newTheme = e.matches ? 'dark' : 'light';
         setTheme(newTheme);
-        applyTheme(newTheme);
       }
     };
 
@@ -290,9 +299,11 @@ const SpecialEducationDictionary = () => {
     return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
   }, [theme]);
 
-  // 테마 토글 함수
+  // 테마 토글 함수 - 디버깅 강화
   const toggleTheme = () => {
+    console.log('토글 버튼 클릭! 현재 테마:', theme); // 디버깅용
     const newTheme = theme === 'light' ? 'dark' : 'light';
+    console.log('새로운 테마:', newTheme); // 디버깅용
     setTheme(newTheme);
   };
 
@@ -578,20 +589,33 @@ const SpecialEducationDictionary = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div
+      className="min-h-screen transition-all duration-500"
+      style={{
+        background: theme === 'dark'
+          ? 'linear-gradient(135deg, #1e3a8a 0%, #581c87 100%)'
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: theme === 'dark' ? '#f8fafc' : '#1e293b'
+      }}
+    >
       <div className="max-w-4xl mx-auto p-4">
         <div className="text-center mb-10 relative">
-          {/* 테마 토글 버튼 */}
+          {/* 테마 토글 버튼 - 고대비 개선 */}
           <button
             onClick={toggleTheme}
-            className="absolute top-0 right-0 p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105"
+            className="absolute top-0 right-0 z-50 p-4 rounded-full bg-white/90 backdrop-blur-sm border-2 border-gray-300 text-gray-800 hover:bg-white hover:border-gray-400 hover:scale-110 transition-all duration-300 shadow-lg"
             title={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
             aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
+            style={{
+              backgroundColor: theme === 'dark' ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+              color: theme === 'dark' ? '#f8fafc' : '#1e293b',
+              borderColor: theme === 'dark' ? 'rgba(248, 250, 252, 0.3)' : 'rgba(30, 41, 59, 0.3)'
+            }}
           >
             {theme === 'light' ? (
-              <Moon className="w-5 h-5" />
+              <Moon className="w-6 h-6" />
             ) : (
-              <Sun className="w-5 h-5" />
+              <Sun className="w-6 h-6" />
             )}
           </button>
 
