@@ -11,7 +11,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!static|favicon.ico|logo192.png|logo512.png|manifest.json|service-worker.js).*)",
       "destination": "/index.html"
     }
   ],
