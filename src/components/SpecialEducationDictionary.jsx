@@ -612,7 +612,7 @@ const SpecialEducationDictionary = () => {
 
           <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">특수교육 용어 사전</h1>
           <p className="text-white/90 text-lg font-medium">생활어를 전공어로 쉽게 변환하고 나만의 용어를 추가하세요</p>
-          <div className="text-white/70 text-sm mt-2">v1.0.4 - 미니멀 테마 토글 버튼 적용</div>
+          <div className="text-white/70 text-sm mt-2">v1.0.5 - 다크 모드 가독성 개선</div>
         </div>
 
         <div className="relative mb-6">

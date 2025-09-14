@@ -251,6 +251,113 @@
   color: var(--theme-text-primary) !important;
 }
 
+/* ==============================================
+   다크 모드 가독성 긴급 수정
+   ============================================== */
+
+/* 1. 하단 즐겨찾기 영역 수정 (최우선) */
+[data-theme="dark"] .favorites-section,
+[data-theme="dark"] .bookmark-area,
+[data-theme="dark"] .empty-favorites {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(100, 116, 139, 0.3) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .favorites-section .star-icon,
+[data-theme="dark"] .bookmark-area .star-icon {
+  color: #fbbf24 !important;
+  filter: brightness(1.2);
+}
+
+[data-theme="dark"] .favorites-section p,
+[data-theme="dark"] .favorites-section span,
+[data-theme="dark"] .favorites-section div,
+[data-theme="dark"] .bookmark-area p,
+[data-theme="dark"] .bookmark-area span,
+[data-theme="dark"] .bookmark-area div {
+  color: #cbd5e0 !important;
+}
+
+/* 2. 모든 카드 영역 통일 */
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .card,
+[data-theme="dark"] .content-card {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(100, 116, 139, 0.3) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* 3. 사용 도움말 섹션 */
+[data-theme="dark"] .bg-blue-50 {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .bg-blue-50 h4,
+[data-theme="dark"] .bg-blue-50 ul,
+[data-theme="dark"] .bg-blue-50 li {
+  color: #cbd5e0 !important;
+}
+
+[data-theme="dark"] .text-blue-800,
+[data-theme="dark"] .text-blue-700 {
+  color: #93c5fd !important;
+}
+
+/* 4. 버튼 스타일 개선 */
+[data-theme="dark"] .btn-primary {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] .btn-success {
+  background: rgba(34, 197, 94, 0.1) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  color: #86efac !important;
+}
+
+/* 5. 텍스트 색상 강화 */
+[data-theme="dark"] .text-neutral-700,
+[data-theme="dark"] .text-gray-700,
+[data-theme="dark"] .text-gray-600,
+[data-theme="dark"] .text-neutral-600 {
+  color: #cbd5e0 !important;
+}
+
+[data-theme="dark"] .text-neutral-500,
+[data-theme="dark"] .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .text-neutral-400,
+[data-theme="dark"] .text-gray-400 {
+  color: #64748b !important;
+}
+
+/* 6. 특별 아이콘 색상 */
+[data-theme="dark"] .text-yellow-500 {
+  color: #fbbf24 !important;
+  filter: brightness(1.1);
+}
+
+[data-theme="dark"] .text-primary-500,
+[data-theme="dark"] .text-blue-600 {
+  color: #60a5fa !important;
+}
+
+[data-theme="dark"] .text-success-600 {
+  color: #34d399 !important;
+}
+
+/* 7. 빈 상태 스타일 */
+[data-theme="dark"] .empty-state {
+  background: rgba(30, 41, 59, 0.6) !important;
+  border: 2px dashed rgba(100, 116, 139, 0.4) !important;
+  color: #94a3b8 !important;
+}
+
 /* 기본 스타일 리셋 */
 * {
   margin: 0;
