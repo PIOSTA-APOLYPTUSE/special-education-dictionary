@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List, Moon, Sun } from 'lucide-react';
+import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List } from 'lucide-react';
 
 // Force build hash change for deployment v1.0.1
 const SpecialEducationDictionary = () => {
@@ -612,7 +612,7 @@ const SpecialEducationDictionary = () => {
 
           <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">특수교육 용어 사전</h1>
           <p className="text-white/90 text-lg font-medium">생활어를 전공어로 쉽게 변환하고 나만의 용어를 추가하세요</p>
-          <div className="text-white/70 text-sm mt-2">v1.0.2 - 다크/라이트 테마 및 접근성 개선</div>
+          <div className="text-white/70 text-sm mt-2">v1.0.4 - 미니멀 테마 토글 버튼 적용</div>
         </div>
 
         <div className="relative mb-6">
