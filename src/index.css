@@ -358,21 +358,67 @@ body {
 
 /* 모바일 최적화 */
 @media (max-width: 768px) {
-  body { font-size: 14px; }
-  
+  body {
+    font-size: 14px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
+    color: white;
+  }
+
   .card {
     border-radius: 12px;
     margin-bottom: 12px;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+    color: white;
   }
-  
+
   .input-field {
     padding: 14px 16px;
     border-radius: 12px;
+    background: rgba(15, 23, 42, 0.9);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
   }
-  
+
+  .input-field::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
   .btn-primary, .btn-success {
     padding: 10px 20px;
     border-radius: 10px;
+  }
+
+  /* 모바일에서 모든 텍스트를 흰색으로 강제 변경 */
+  .text-gray-600, .text-neutral-600,
+  .text-gray-700, .text-neutral-700,
+  .text-gray-800, .text-neutral-800,
+  .text-gray-500, .text-neutral-500,
+  .text-gray-400, .text-neutral-400,
+  .text-blue-700, .text-blue-800,
+  p, span, div, h1, h2, h3, h4, h5, h6 {
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  /* 배지와 태그 스타일 개선 */
+  .bg-neutral-100, .bg-gray-100 {
+    background-color: rgba(55, 65, 81, 0.8) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* 법률 예문 */
+  .legal-example {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(30, 64, 175, 0.3));
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  /* 백그라운드 색상 조정 */
+  .bg-white {
+    background: rgba(30, 41, 59, 0.95) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  .tab-container {
+    background: rgba(30, 41, 59, 0.95) !important;
   }
 }
 
@@ -389,20 +435,53 @@ body {
   :root {
     --gradient-background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
   }
-  
+
   body {
     background: var(--gradient-background);
     color: var(--neutral-100);
   }
-  
+
   .bg-white {
     background: rgba(30, 41, 59, 0.95);
     color: var(--neutral-100);
   }
-  
+
   .card {
     background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
     border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* 모든 어두운 텍스트 색상을 밝게 변경 */
+  .text-gray-600, .text-neutral-600 { color: rgba(255, 255, 255, 0.9) !important; }
+  .text-gray-700, .text-neutral-700 { color: rgba(255, 255, 255, 0.95) !important; }
+  .text-gray-800, .text-neutral-800 { color: rgba(255, 255, 255, 1) !important; }
+  .text-gray-500, .text-neutral-500 { color: rgba(255, 255, 255, 0.8) !important; }
+  .text-gray-400, .text-neutral-400 { color: rgba(255, 255, 255, 0.7) !important; }
+
+  /* 도움말 텍스트 */
+  .text-blue-700, .text-blue-800 { color: rgba(255, 255, 255, 0.95) !important; }
+
+  /* 모달과 입력 필드 */
+  .input-field {
+    background: rgba(15, 23, 42, 0.9);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .input-field::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* 배지와 예시 태그 */
+  .bg-neutral-100 {
+    background-color: rgba(55, 65, 81, 0.8) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* 법률 예문 배경 */
+  .legal-example {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(30, 64, 175, 0.3));
+    color: rgba(255, 255, 255, 0.95) !important;
   }
 }
 
