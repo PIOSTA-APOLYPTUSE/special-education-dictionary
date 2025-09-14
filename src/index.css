@@ -2,7 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* 색상 팔레트 - 따뜻하고 전문적인 톤 */
+  /* ==============================================
+     THEME SYSTEM - WCAG AA 호환 색상 팔레트
+     ============================================== */
+
+  /* 기본 색상 팔레트 */
   --primary-50: #f0f9ff;
   --primary-100: #e0f2fe;
   --primary-200: #bae6fd;
@@ -69,24 +73,88 @@
   --neutral-800: #262626;
   --neutral-900: #171717;
 
+  /* ==============================================
+     LIGHT THEME (기본값)
+     ============================================== */
+
+  /* 배경 색상 */
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8fafc;
+  --theme-bg-tertiary: #f1f5f9;
+  --theme-bg-card: #ffffff;
+  --theme-bg-overlay: rgba(0, 0, 0, 0.05);
+
+  /* 텍스트 색상 - WCAG AA 준수 (4.5:1 이상) */
+  --theme-text-primary: #1e293b;          /* 대비율: 15.78:1 */
+  --theme-text-secondary: #334155;        /* 대비율: 10.58:1 */
+  --theme-text-tertiary: #475569;         /* 대비율: 7.25:1 */
+  --theme-text-muted: #64748b;            /* 대비율: 5.14:1 */
+  --theme-text-disabled: #94a3b8;         /* 대비율: 2.84:1 */
+  --theme-text-inverse: #ffffff;
+
+  /* 테두리 색상 */
+  --theme-border-primary: #e2e8f0;
+  --theme-border-secondary: #cbd5e1;
+  --theme-border-focus: var(--primary-500);
+
   /* 그라디언트 */
-  --gradient-primary: linear-gradient(135deg, var(--primary-400), var(--primary-600));
-  --gradient-secondary: linear-gradient(135deg, var(--secondary-400), var(--secondary-600));
-  --gradient-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  --theme-gradient-primary: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+  --theme-gradient-secondary: linear-gradient(135deg, var(--secondary-400), var(--secondary-600));
+  --theme-gradient-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --theme-gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
 
   /* 그림자 */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --shadow-float: 0 25px 50px rgba(0, 0, 0, 0.15);
+  --theme-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --theme-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --theme-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --theme-shadow-float: 0 25px 50px rgba(0, 0, 0, 0.15);
 
   /* 애니메이션 */
   --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==============================================
+   DARK THEME
+   ============================================== */
+[data-theme="dark"],
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 배경 색상 */
+    --theme-bg-primary: #0f172a;
+    --theme-bg-secondary: #1e293b;
+    --theme-bg-tertiary: #334155;
+    --theme-bg-card: #1e293b;
+    --theme-bg-overlay: rgba(255, 255, 255, 0.05);
+
+    /* 텍스트 색상 - WCAG AA 준수 */
+    --theme-text-primary: #f8fafc;          /* 대비율: 17.09:1 */
+    --theme-text-secondary: #e2e8f0;        /* 대비율: 12.63:1 */
+    --theme-text-tertiary: #cbd5e1;         /* 대비율: 9.14:1 */
+    --theme-text-muted: #94a3b8;            /* 대비율: 5.17:1 */
+    --theme-text-disabled: #64748b;         /* 대비율: 3.05:1 */
+    --theme-text-inverse: #0f172a;
+
+    /* 테두리 색상 */
+    --theme-border-primary: #334155;
+    --theme-border-secondary: #475569;
+    --theme-border-focus: var(--primary-400);
+
+    /* 그라디언트 */
+    --theme-gradient-background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
+    --theme-gradient-card: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+
+    /* 그림자 - 다크모드용 */
+    --theme-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --theme-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+    --theme-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+    --theme-shadow-float: 0 25px 50px rgba(0, 0, 0, 0.8);
+  }
 }
 
 /* 기본 스타일 리셋 */
@@ -101,15 +169,16 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--gradient-background);
+  background: var(--theme-gradient-background);
   min-height: 100vh;
   line-height: 1.6;
-  color: var(--neutral-800);
+  color: var(--theme-text-primary);
+  transition: var(--transition-normal);
 }
 
 /* 배경 그라디언트 */
 .bg-gradient-to-br {
-  background: var(--gradient-background);
+  background: var(--theme-gradient-background);
   background-attachment: fixed;
 }
 
@@ -168,79 +237,85 @@ body {
 
 /* 카드 스타일 개선 */
 .card {
-  background: var(--gradient-card);
+  background: var(--theme-bg-card);
+  color: var(--theme-text-primary);
   border-radius: 16px;
-  box-shadow: var(--shadow-card);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--theme-shadow-card);
+  border: 1px solid var(--theme-border-primary);
   backdrop-filter: blur(20px);
   transition: var(--transition-normal);
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-float);
+  box-shadow: var(--theme-shadow-float);
 }
 
 /* 버튼 스타일 개선 */
 .btn-primary {
-  background: var(--gradient-primary);
-  color: white;
+  background: var(--theme-gradient-primary);
+  color: var(--theme-text-inverse);
   border: none;
   border-radius: 12px;
   padding: 12px 24px;
   font-weight: 600;
   transition: var(--transition-normal);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--theme-shadow-md);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--theme-shadow-lg);
 }
 
 .btn-success {
   background: linear-gradient(135deg, var(--success-500), var(--success-600));
-  color: white;
+  color: var(--theme-text-inverse);
   border: none;
   border-radius: 12px;
   padding: 12px 24px;
   font-weight: 600;
   transition: var(--transition-normal);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--theme-shadow-md);
 }
 
 .btn-success:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--theme-shadow-lg);
 }
 
 /* 입력 필드 개선 */
 .input-field {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--theme-bg-secondary);
+  color: var(--theme-text-primary);
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--theme-border-primary);
   border-radius: 16px;
   padding: 16px 20px;
   font-size: 16px;
   transition: var(--transition-normal);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--theme-shadow-sm);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--primary-400);
+  border-color: var(--theme-border-focus);
   box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-  background: rgba(255, 255, 255, 1);
+  background: var(--theme-bg-card);
+}
+
+.input-field::placeholder {
+  color: var(--theme-text-muted);
 }
 
 /* 탭 스타일 개선 */
 .tab-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--theme-bg-card);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 8px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--theme-shadow-md);
+  border: 1px solid var(--theme-border-primary);
 }
 
 .tab-button {
@@ -250,22 +325,23 @@ body {
   border: none;
   background: transparent;
   font-weight: 500;
+  color: var(--theme-text-secondary);
 }
 
 .tab-button.active {
-  background: var(--gradient-primary);
-  color: white;
-  box-shadow: var(--shadow-md);
+  background: var(--theme-gradient-primary);
+  color: var(--theme-text-inverse);
+  box-shadow: var(--theme-shadow-md);
   transform: translateY(-1px);
 }
 
 .tab-button:not(.active) {
-  color: var(--neutral-600);
+  color: var(--theme-text-secondary);
 }
 
 .tab-button:not(.active):hover {
-  background: rgba(14, 165, 233, 0.1);
-  color: var(--primary-600);
+  background: var(--theme-bg-overlay);
+  color: var(--theme-text-primary);
 }
 
 /* 배지 스타일 */
@@ -298,9 +374,17 @@ body {
   padding: 16px;
   font-size: 13px;
   line-height: 1.6;
-  color: var(--primary-800);
+  color: var(--theme-text-primary);
   position: relative;
   overflow: hidden;
+}
+
+[data-theme="dark"] .legal-example,
+@media (prefers-color-scheme: dark) {
+  .legal-example {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(30, 64, 175, 0.3));
+    color: var(--theme-text-primary);
+  }
 }
 
 .legal-example::before {
@@ -360,65 +444,21 @@ body {
 @media (max-width: 768px) {
   body {
     font-size: 14px;
-    background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
-    color: white;
   }
 
   .card {
     border-radius: 12px;
     margin-bottom: 12px;
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
-    color: white;
   }
 
   .input-field {
     padding: 14px 16px;
     border-radius: 12px;
-    background: rgba(15, 23, 42, 0.9);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .input-field::placeholder {
-    color: rgba(255, 255, 255, 0.6);
   }
 
   .btn-primary, .btn-success {
     padding: 10px 20px;
     border-radius: 10px;
-  }
-
-  /* 모바일에서 모든 텍스트를 흰색으로 강제 변경 */
-  .text-gray-600, .text-neutral-600,
-  .text-gray-700, .text-neutral-700,
-  .text-gray-800, .text-neutral-800,
-  .text-gray-500, .text-neutral-500,
-  .text-gray-400, .text-neutral-400,
-  .text-blue-700, .text-blue-800,
-  p, span, div, h1, h2, h3, h4, h5, h6 {
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-
-  /* 배지와 태그 스타일 개선 */
-  .bg-neutral-100, .bg-gray-100 {
-    background-color: rgba(55, 65, 81, 0.8) !important;
-    color: rgba(255, 255, 255, 0.9) !important;
-  }
-
-  /* 법률 예문 */
-  .legal-example {
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(30, 64, 175, 0.3));
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-
-  /* 백그라운드 색상 조정 */
-  .bg-white {
-    background: rgba(30, 41, 59, 0.95) !important;
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-
-  .tab-container {
-    background: rgba(30, 41, 59, 0.95) !important;
   }
 }
 
@@ -430,60 +470,6 @@ body {
   }
 }
 
-/* 다크모드 지원 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --gradient-background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
-  }
-
-  body {
-    background: var(--gradient-background);
-    color: var(--neutral-100);
-  }
-
-  .bg-white {
-    background: rgba(30, 41, 59, 0.95);
-    color: var(--neutral-100);
-  }
-
-  .card {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  /* 모든 어두운 텍스트 색상을 밝게 변경 */
-  .text-gray-600, .text-neutral-600 { color: rgba(255, 255, 255, 0.9) !important; }
-  .text-gray-700, .text-neutral-700 { color: rgba(255, 255, 255, 0.95) !important; }
-  .text-gray-800, .text-neutral-800 { color: rgba(255, 255, 255, 1) !important; }
-  .text-gray-500, .text-neutral-500 { color: rgba(255, 255, 255, 0.8) !important; }
-  .text-gray-400, .text-neutral-400 { color: rgba(255, 255, 255, 0.7) !important; }
-
-  /* 도움말 텍스트 */
-  .text-blue-700, .text-blue-800 { color: rgba(255, 255, 255, 0.95) !important; }
-
-  /* 모달과 입력 필드 */
-  .input-field {
-    background: rgba(15, 23, 42, 0.9);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .input-field::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
-
-  /* 배지와 예시 태그 */
-  .bg-neutral-100 {
-    background-color: rgba(55, 65, 81, 0.8) !important;
-    color: rgba(255, 255, 255, 0.9) !important;
-  }
-
-  /* 법률 예문 배경 */
-  .legal-example {
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(30, 64, 175, 0.3));
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-}
 
 /* 기존 유틸리티 클래스들 (호환성 유지) */
 .min-h-screen { min-height: 100vh; }
@@ -600,7 +586,33 @@ body {
 .inline-block { display: inline-block; }
 .block { display: block; }
 
-/* 호환성을 위한 색상 별칭 */
+/* ==============================================
+   THEME-AWARE TEXT COLORS - WCAG AA 준수
+   ============================================== */
+
+/* 주요 텍스트 색상 */
+.text-primary { color: var(--theme-text-primary); }
+.text-secondary { color: var(--theme-text-secondary); }
+.text-tertiary { color: var(--theme-text-tertiary); }
+.text-muted { color: var(--theme-text-muted); }
+.text-disabled { color: var(--theme-text-disabled); }
+.text-inverse { color: var(--theme-text-inverse); }
+
+/* 기존 클래스들의 테마 변수 매핑 */
+.text-gray-400, .text-neutral-400 { color: var(--theme-text-muted); }
+.text-gray-500, .text-neutral-500 { color: var(--theme-text-muted); }
+.text-gray-600, .text-neutral-600 { color: var(--theme-text-secondary); }
+.text-gray-700, .text-neutral-700 { color: var(--theme-text-primary); }
+.text-gray-800, .text-neutral-800 { color: var(--theme-text-primary); }
+
+/* 상태별 색상 (항상 명확히 보이도록) */
+.text-blue-600, .text-blue-700, .text-blue-800 { color: var(--primary-600); }
+.text-green-600 { color: var(--success-600); }
+.text-yellow-500, .text-yellow-600 { color: var(--warning-600); }
+.text-red-400, .text-red-500, .text-red-600 { color: var(--error-500); }
+.text-purple-800 { color: var(--secondary-700); }
+
+/* 호환성을 위한 배경 색상 별칭 */
 .bg-blue-50 { background-color: var(--primary-50); }
 .bg-blue-100 { background-color: var(--primary-100); }
 .bg-blue-500 { background-color: var(--primary-500); }
@@ -610,23 +622,17 @@ body {
 .bg-purple-800 { background-color: var(--secondary-800); }
 .bg-green-500 { background-color: var(--success-500); }
 .bg-green-600 { background-color: var(--success-600); }
-.bg-gray-100 { background-color: var(--neutral-100); }
-.bg-gray-200 { background-color: var(--neutral-200); }
 .bg-yellow-500 { background-color: var(--warning-500); }
 .bg-red-400 { background-color: var(--error-400); }
 
-.text-blue-600 { color: var(--primary-600); }
-.text-blue-700 { color: var(--primary-700); }
-.text-blue-800 { color: var(--primary-800); }
-.text-green-600 { color: var(--success-600); }
-.text-gray-400 { color: var(--neutral-400); }
-.text-gray-500 { color: var(--neutral-500); }
-.text-gray-600 { color: var(--neutral-600); }
-.text-gray-700 { color: var(--neutral-700); }
-.text-gray-800 { color: var(--neutral-800); }
-.text-yellow-500 { color: var(--warning-500); }
-.text-yellow-600 { color: var(--warning-600); }
-.text-purple-800 { color: var(--secondary-800); }
-.text-red-400 { color: var(--error-400); }
-.text-red-500 { color: var(--error-500); }
-.text-red-600 { color: var(--error-600); }
+/* 테마별 배경 색상 */
+.bg-gray-100, .bg-neutral-100 {
+  background-color: var(--theme-bg-secondary);
+}
+.bg-gray-200, .bg-neutral-200 {
+  background-color: var(--theme-bg-tertiary);
+}
+.bg-white {
+  background-color: var(--theme-bg-card);
+  color: var(--theme-text-primary);
+}

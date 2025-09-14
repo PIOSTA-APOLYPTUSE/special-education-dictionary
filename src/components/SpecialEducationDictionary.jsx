@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List } from 'lucide-react';
+import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List, Moon, Sun } from 'lucide-react';
 
 // Force build hash change for deployment v1.0.1
 const SpecialEducationDictionary = () => {
@@ -25,6 +25,16 @@ const SpecialEducationDictionary = () => {
     type: 'improvement', // 'improvement', 'bug', 'feature'
     title: '',
     description: ''
+  });
+
+  // 테마 상태 관리
+  const [theme, setTheme] = useState(() => {
+    // 로컬 스토리지에서 저장된 테마 불러오기, 없으면 시스템 설정 감지
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) return savedTheme;
+
+    // 시스템 다크모드 설정 감지
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   // 생활어 → 전공어 변환 데이터베이스 (법률 예문 추가)
@@ -251,6 +261,40 @@ const SpecialEducationDictionary = () => {
   useEffect(() => {
     localStorage.setItem('suggestions', JSON.stringify(suggestions));
   }, [suggestions]);
+
+  // 테마 초기화 및 적용
+  useEffect(() => {
+    const applyTheme = (theme) => {
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    };
+
+    // 초기 테마 적용
+    applyTheme(theme);
+    localStorage.setItem('theme', theme);
+
+    // 시스템 테마 변경 감지
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = (e) => {
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        setTheme(newTheme);
+        applyTheme(newTheme);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+  }, [theme]);
+
+  // 테마 토글 함수
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+  };
 
   // 전체 사전 (기본 + 사용자 정의)
   const allTerms = [...dictionary, ...customTerms];
@@ -536,10 +580,24 @@ const SpecialEducationDictionary = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-4xl mx-auto p-4">
-        <div className="text-center mb-10">
+        <div className="text-center mb-10 relative">
+          {/* 테마 토글 버튼 */}
+          <button
+            onClick={toggleTheme}
+            className="absolute top-0 right-0 p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105"
+            title={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
+            aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
+          >
+            {theme === 'light' ? (
+              <Moon className="w-5 h-5" />
+            ) : (
+              <Sun className="w-5 h-5" />
+            )}
+          </button>
+
           <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">특수교육 용어 사전</h1>
           <p className="text-white/90 text-lg font-medium">생활어를 전공어로 쉽게 변환하고 나만의 용어를 추가하세요</p>
-          <div className="text-white/70 text-sm mt-2">v1.0.1 - 향상된 검색 및 관리 기능</div>
+          <div className="text-white/70 text-sm mt-2">v1.0.2 - 다크/라이트 테마 및 접근성 개선</div>
         </div>
 
         <div className="relative mb-6">
