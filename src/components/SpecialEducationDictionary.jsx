@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, BookOpen, Lightbulb, Star, History, ArrowRight, Plus, X, FileText, Trash2, MessageSquare, Send, Edit, List } from 'lucide-react';
 
-// Force build hash change for deployment v1.0.1
+// Force build hash change for deployment v1.0.5 - Dark mode fixes
 const SpecialEducationDictionary = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
