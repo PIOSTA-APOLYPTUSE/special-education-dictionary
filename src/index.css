@@ -1,6 +1,60 @@
 /* 특수교육 사전 - 개선된 디자인 시스템 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* ==============================================
+   미니멀 테마 토글 버튼 스타일
+   ============================================== */
+.theme-toggle {
+  /* 헤더 영역 우상단 고정 */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  /* 작고 깔끔한 크기 */
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+
+  /* 거의 투명하게 */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+
+  /* 중앙 정렬 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
+
+  /* 기본적으로 거의 보이지 않음 */
+  opacity: 0.3;
+  transition: all 0.4s ease;
+
+  /* 이모지 스타일 */
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* 호버할 때만 선명하게 */
+.theme-toggle:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
+/* 다크 모드 스타일 */
+[data-theme="dark"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 :root {
   /* ==============================================
      THEME SYSTEM - WCAG AA 호환 색상 팔레트

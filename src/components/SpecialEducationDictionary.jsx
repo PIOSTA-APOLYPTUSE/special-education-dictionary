@@ -600,23 +600,14 @@ const SpecialEducationDictionary = () => {
     >
       <div className="max-w-4xl mx-auto p-4">
         <div className="text-center mb-10 relative">
-          {/* 테마 토글 버튼 - 고대비 개선 */}
+          {/* 미니멀 테마 토글 버튼 - 헤더 우상단 */}
           <button
             onClick={toggleTheme}
-            className="absolute top-0 right-0 z-50 p-4 rounded-full bg-white/90 backdrop-blur-sm border-2 border-gray-300 text-gray-800 hover:bg-white hover:border-gray-400 hover:scale-110 transition-all duration-300 shadow-lg"
+            className="theme-toggle"
             title={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
             aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
-            style={{
-              backgroundColor: theme === 'dark' ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-              color: theme === 'dark' ? '#f8fafc' : '#1e293b',
-              borderColor: theme === 'dark' ? 'rgba(248, 250, 252, 0.3)' : 'rgba(30, 41, 59, 0.3)'
-            }}
           >
-            {theme === 'light' ? (
-              <Moon className="w-6 h-6" />
-            ) : (
-              <Sun className="w-6 h-6" />
-            )}
+            {theme === 'light' ? '🌙' : '☀️'}
           </button>
 
           <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">특수교육 용어 사전</h1>
