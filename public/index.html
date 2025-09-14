@@ -4,6 +4,15 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- 🚀 강력한 캐시 방지 메타태그들 - 모바일 캐시 문제 해결 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Last-Modified" content="0" />
+    <meta http-equiv="If-Modified-Since" content="0" />
+    <meta name="cache-version" content="v1.0.3-20250914" />
+
     <meta name="theme-color" content="#3b82f6" />
     <!-- Firefox 호환성을 위한 추가 메타 태그 -->
     <meta name="msapplication-TileColor" content="#3b82f6" />
@@ -42,19 +51,116 @@
     <noscript>JavaScript를 활성화해야 이 앱을 사용할 수 있습니다.</noscript>
     <div id="root"></div>
     
-    <!-- PWA 설치 안내 -->
+    <!-- 🚀 강화된 PWA 및 캐시 관리 -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+      // 현재 앱 버전
+      const APP_VERSION = 'v1.0.3-20250914';
+
+      window.addEventListener('load', () => {
+        console.log('🚀 앱 로딩 시작 - 버전:', APP_VERSION);
+
+        // 1. 서비스워커 강제 업데이트
+        if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('/service-worker.js')
             .then((registration) => {
-              console.log('SW registered: ', registration);
+              console.log('✅ SW registered:', registration);
+              // 강제 업데이트 체크
+              registration.update();
+
+              // 새로운 서비스워커가 준비되면 즉시 활성화
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('🔄 새로운 버전이 준비됨 - 새로고침 권장');
+                    // 자동 새로고침 (주석 해제하면 활성화)
+                    // window.location.reload();
+                  }
+                });
+              });
             })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
+            .catch((error) => {
+              console.log('❌ SW registration failed:', error);
             });
-        });
-      }
+
+          // 모든 서비스워커 강제 업데이트
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => {
+              registration.update();
+            });
+          });
+        }
+
+        // 2. 앱 버전 체크 및 캐시 초기화
+        const storedVersion = localStorage.getItem('app-version');
+        if (storedVersion !== APP_VERSION) {
+          console.log('🔄 버전 업데이트 감지:', storedVersion, '→', APP_VERSION);
+          // 테마 설정만 보존하고 나머지 초기화
+          const savedTheme = localStorage.getItem('theme');
+          localStorage.clear();
+          if (savedTheme) {
+            localStorage.setItem('theme', savedTheme);
+          }
+          localStorage.setItem('app-version', APP_VERSION);
+        }
+
+        // 3. 모바일 전용 디버깅 도구
+        if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+          const debugDiv = document.createElement('div');
+          debugDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(239, 68, 68, 0.95);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            z-index: 999999;
+            font-family: monospace;
+            font-size: 11px;
+            line-height: 1.3;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          `;
+          debugDiv.innerHTML = `
+            📱 Mobile Debug Info<br>
+            ⏰ ${new Date().toLocaleString()}<br>
+            📦 Version: ${APP_VERSION}<br>
+            🎨 Theme: ${document.documentElement.getAttribute('data-theme') || 'light'}<br>
+            🌐 UA: ${navigator.userAgent.includes('iPhone') ? 'iPhone' : navigator.userAgent.includes('Android') ? 'Android' : 'Mobile'}<br>
+            🔄 Click to dismiss
+          `;
+
+          debugDiv.onclick = () => debugDiv.remove();
+          document.body.appendChild(debugDiv);
+
+          // 5초 후 자동 제거
+          setTimeout(() => {
+            if (debugDiv.parentNode) debugDiv.remove();
+          }, 5000);
+        }
+
+        // 4. 테마 시스템 즉시 활성화 (캐시 문제 방지)
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.body.classList.add('dark-theme');
+          console.log('🌙 다크 테마 즉시 적용');
+        }
+      });
+
+      // 5. 페이지 가시성 변경 시 강제 업데이트 체크
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then((registrations) => {
+              registrations.forEach((registration) => {
+                registration.update();
+              });
+            });
+          }
+        }
+      });
     </script>
   </body>
 </html>
